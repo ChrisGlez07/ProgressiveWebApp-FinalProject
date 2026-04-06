@@ -1,0 +1,28 @@
+{
+    "name": "University Incident Reporter",
+    "short_name": "ReportUTP",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#f18520",
+    "theme_color": "#f18520",
+    "description": "Report infrastructure issues with photos and location",
+    "icons": [
+        {
+            "src": "images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "images/screenshot1.png",
+            "sizes": "1080x1920",
+            "type": "image/png"
+        }
+    ]
+}
