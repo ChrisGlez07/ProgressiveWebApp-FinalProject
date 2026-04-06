@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#f18520">
+    <title>ReportUTP - Reporte de Incidencias</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/inventario.css">
+</head>
+<body>
+    <div class="app-shell">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>ReportUTR</h1>
+            </div>
+            <div id="status" class="status online">🟢 Online</div>
+        </nav>
+
+        <main class="main-content">
+            <div class="reports-header">
+                <h2>Report List</h2>
+                <span id="pending-badge" class="pending-badge" style="display: none;">0</span>
+            </div>
+            
+            <div id="reports-list" class="reports-list">
+                <div class="loading">Loading Reports...</div>
+            </div>
+        </main>
+
+        <button id="fab" class="fab" aria-label="Nuevo reporte">
+            <span class="fab-icon">+</span>
+        </button>
+
+        <div id="report-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>New Report</h2>
+                    <button id="close-modal" class="close-btn">&times;</button>
+                </div>
+                
+                <form id="form-reportes">
+                    <div class="form-group">
+                        <label for="reporte-titulo">Problem Title *</label>
+                        <input type="text" id="reporte-titulo" placeholder="Ej: Dirty floor" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reporte-categoria">Category</label>
+                        <select id="reporte-categoria">
+                            <option value="electricity">Electricity</option>
+                            <option value="infraestructure">Infraestructure</option>
+                            <option value="computing">computing</option>
+                            <option value="cleaning">cleaning</option>
+                            <option value="security">Security</option>
+                            <option value="general">General</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reporte-descripcion">Detailed Description</label>
+                        <textarea id="reporte-descripcion" rows="3" placeholder="Describe the issue..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Photograph evidence</label>
+                        <div class="camera-section">
+                            <video id="video" autoplay playsinline style="display: none;"></video>
+                            <canvas id="canvas" style="display: none;"></canvas>|
+                            <div class="camera-controls">
+                                <button type="button" id="openCamera" onclick="iniciarCamera()" class="btn-secondary">Open camera</button>
+                                <button type="button" id="capture" class="btn-secondary" style="display: none;">Capture</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Enviar Reporte</button>
+                        <button type="button" id="cancel-report" class="btn-secondary">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="InventarioDB.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
