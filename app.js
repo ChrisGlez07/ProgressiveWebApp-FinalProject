@@ -1,11 +1,69 @@
-/**
- * Obtiene la ubicación actual del usuario usando el GPS
- * @returns {Promise} Promesa que resuelve con el objeto de ubicación
- *//**
- * Muestra una notificación al usuario
- * @param {string} message - Mensaje a mostrar
- * @param {string} type - Tipo de notificación ('info', 'success', 'error')
- */
+const reportsList = document.getElementById('reports-list'); 
+const statusDiv = document.getElementById('status');
+const pendingBadge = document.getElementById('pending-badge'); 
+
+async function mostrarReportes() {
+    try {
+        const reports = await obtenerReportes(); 
+        reportsList.innerHTML = '';
+
+        if (reports.length === 0) {
+            reportsList.innerHTML = '<div class="empty-state">No hay reportes aún</div>';
+            return;
+        }
+        
+        reports.forEach(report => {
+            const reportDiv = document.createElement('div');
+            reportDiv.className = `report-card ${report.synced ? '' : 'pending'}`;
+            
+            reportDiv.innerHTML = `
+                <div class="report-header">
+                    <h3>${escapeHtml(report.titulo)}</h3>
+                    <span class="report-status ${report.status}">${report.status === 'pending' ? 'Pendiente' : 'Procesado'}</span>
+                </div>
+                <div class="report-category">📁 ${escapeHtml(report.categoria)}</div>
+                ${report.descripcion ? `<div class="report-description">${escapeHtml(report.descripcion)}</div>` : ''}
+                ${report.imagen ? `<img src="${report.imagen}" class="report-image" alt="Evidencia">` : ''}
+                ${report.ubicacion ? `
+                    <div class="report-location">
+                        📍 Lat: ${report.ubicacion.lat.toFixed(6)}<br>
+                        📍 Lng: ${report.ubicacion.lng.toFixed(6)}
+                    </div>
+                ` : ''}
+                <div class="report-footer">
+                    <span class="report-date">📅 ${report.fechaLocal}</span>
+                    ${!report.synced ? '<span class="pending-badge">⏳ Pendiente de sincronizar</span>' : ''}
+                </div>
+            `;
+            
+            reportsList.appendChild(reportDiv);
+        });
+        
+        const pendingCount = await obtenerReportesPendientes();
+        if (pendingBadge) {
+            pendingBadge.textContent = pendingCount;
+            pendingBadge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+        }
+        
+    } catch (error) {
+        console.error('Error al cargar reportes:', error);
+        mostrarNotificacion('Error al cargar reportes', 'error');
+    }
+}
+
+window.addEventListener('online', () => {
+    statusDiv.textContent = '🟢 Online';
+    statusDiv.className = 'status online';
+    mostrarReportes(); 
+});
+
+window.addEventListener('offline', () => {
+    statusDiv.textContent = '🔴 Offline';
+    statusDiv.className = 'status offline';
+});
+
+
+
 function mostrarNotificacion(message, type = 'info') {
     if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('Reporte UTP', {
